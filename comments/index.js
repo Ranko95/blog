@@ -12,10 +12,6 @@ app.use(morgan('dev'));
 
 const commentsByPostId = {};
 
-app.get('/posts/:id/comments', (req, res) => {
-  res.send(commentsByPostId[req.params.id] || []);
-});
-
 app.post('/posts/:id/comments', async (req, res) => {
   const commentId = randomBytes(4).toString('hex');
   const { content } = req.body;
@@ -39,7 +35,7 @@ app.post('/posts/:id/comments', async (req, res) => {
 });
 
 app.post('/events', (req, res) => {
-  console.log('Received Event', req.body.type);
+  console.log('Received Event:', req.body.type);
 
   res.send({});
 });

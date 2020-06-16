@@ -12,10 +12,6 @@ app.use(morgan('dev'));
 
 const posts = {};
 
-app.get('/posts', (req, res) => {
-  res.send(posts);
-});
-
 app.post('/posts', async (req, res) => {
   const { title } = req.body;
   const id = randomBytes(4).toString('hex');
@@ -35,7 +31,7 @@ app.post('/posts', async (req, res) => {
 });
 
 app.post('/events', (req, res) => {
-  console.log('Received Event', req.body.type);
+  console.log('Received Event:', req.body.type);
 
   res.send({});
 });
