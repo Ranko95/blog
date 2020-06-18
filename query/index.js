@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const { randomBytes } = require('crypto');
 const cors = require('cors');
 
 const app = express();
@@ -18,24 +17,28 @@ app.get('/posts', (req, res) => {
 app.post('/events', (req, res) => {
   const { type, data } = req.body;
 
-  switch (type) {
-    case 'PostCreated':
-      const { id, title } = data;
-      posts[id] = { id, title, comments: [] };
+  if (type === 'PostCreated') {
+    const { id, title } = data;
 
-      break;
+    posts[id] = { id, title, comments: [] };
+  }
 
-    case 'CommentCreated':
-      const commentId = data.id;
-      const { content, postId } = data;
+  if (type === 'CommentCreated') {
+    const { id, content, postId, status } = data;
 
-      const post = posts[postId];
-      post.comments.push({ commentId, content });
-
-      break;
+    const post = posts[postId];
+    post.comments.push({ id, content, status });
+  }
   
-    default:
-      break;
+  if (type === 'CommentUpdated') {
+    const { id, content, postId, status } = data;
+
+    const post = posts[postId];
+
+    const comment = post.comments.find(comment => comment.id === id);
+
+    comment.status = status;
+    comment.content = content;
   }
   
   res.send({});
